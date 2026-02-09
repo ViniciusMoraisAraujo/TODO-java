@@ -1,5 +1,6 @@
 package service;
 
+import model.Status;
 import model.Task;
 
 import java.io.*;
@@ -37,16 +38,16 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    public List<Task> getTasksByStatus(String category) {
+    public List<Task> getTasksByStatus(Status status) {
         return tasks.stream()
-                .filter(task -> task.getCategory().equalsIgnoreCase(category))
+                .filter(task -> task.getStatus().equals(status))
                 .collect(Collectors.toList());
     }
 
     private void saveTasks() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (Task task : tasks) {
-                writer.write(task.toString());
+                writer.write(task.toFileFormat());
                 writer.newLine();
             }
         } catch (IOException e) {

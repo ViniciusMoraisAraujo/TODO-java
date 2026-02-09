@@ -37,24 +37,25 @@ public class Task implements Comparable<Task>, Serializable {
     public String toString() {
         return String.format(
                 "[%s] %s | Prioridade: %d | Categoria: %s | Prazo: %s | Desc: %s",
-                status, name, priority, category, deadline, description
-        );
+                status, name, priority, category, deadline, description);
     }
 
     public String toFileFormat() {
-        return String.format("%s|%s|%s|%d|%s|%s",
-                name, description, deadline, priority, category, status);
+        return name + ";" + description + ";" + deadline + ";" + priority + ";" + category + ";" + status;
     }
 
     public static Task fromFileFormat(String line) {
-        String[] parts = line.split("\\|");
+        String[] parts = line.split(";");
+        // Verifica se a linha tem as 6 partes necessárias para evitar erro de índice
+        if (parts.length < 6) return null;
+
         return new Task(
-                parts[0],
-                parts[1],
-                parts[2],
-                Integer.parseInt(parts[3]),
-                parts[4],
-                Status.valueOf(parts[5])
+                parts[0],                       // name
+                parts[1],                       // description
+                parts[2],                       // deadline
+                Integer.parseInt(parts[3]),     // priority (Agora é garantido ser número)
+                parts[4],                       // category
+                Status.valueOf(parts[5])        // status
         );
     }
 }
