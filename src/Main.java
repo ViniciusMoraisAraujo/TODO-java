@@ -2,6 +2,7 @@ import model.Status;
 import model.Task;
 import service.TaskService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -54,8 +55,16 @@ public class Main {
         System.out.print("Descrição: ");
         String desc = scanner.nextLine();
 
-        System.out.print("Prazo (ex: 20/12/2024): ");
-        String date = scanner.nextLine();
+        LocalDateTime date = null;
+        while (date == null) {
+            System.out.print("Prazo (ex: 20/12/2024 14:30): ");
+            String inputDate = scanner.nextLine();
+            try {
+                date = LocalDateTime.parse(inputDate, Task.FORMATTER);
+            } catch (Exception e) {
+                System.out.println("Formato inválido! Por favor, use exatamente o formato dia/mês/ano hora:minuto.");
+            }
+        }
 
         int priority = 1;
         while (true) {
