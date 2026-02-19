@@ -25,7 +25,19 @@ public class TaskService {
     }
 
     public void removeTask(String taskName) {
-        tasks.removeIf(task -> task.getName().equalsIgnoreCase(taskName));
+        boolean removed = tasks.removeIf(task -> task.getName().equalsIgnoreCase(taskName));
+        if(removed) saveTasks();
+    }
+
+    public boolean updateTaskStatus(String taskName, Status newStatus) {
+        for (Task task : tasks) {
+            if (task.getName().equalsIgnoreCase(taskName)) {
+                task.setStatus(newStatus);
+                saveTasks(); 
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Task> getAllTasks() {
@@ -62,7 +74,10 @@ public class TaskService {
             String line;
             while ((line = reader.readLine()) !=  null){
                 if (!line.trim().isEmpty()){
-                    tasks.add(Task.fromFileFormat(line));
+                    Task loadedTask = Task.fromFileFormat(line);
+                    if (loadedTask != null) { 
+                        tasks.add(loadedTask);
+                    }
                 }
             }
             Collections.sort(tasks);
@@ -70,6 +85,4 @@ public class TaskService {
             throw new RuntimeException(e);
         }
     }
-
-
 }
